@@ -50,8 +50,8 @@ const Releases: NextPage<{ issues: JiraIssueModel[] }> = ({ issues }) => {
       </Head>
 
       <ThemeProvider theme={theme}>
-        <main className={styles.main}>
-          <ContentWrapper>
+        <ContentWrapper>
+          <main className={styles.main}>
             <GridWrapper>
               <GridInner height={issues.length * 37 + 40}>
                 <Grid
@@ -62,8 +62,8 @@ const Releases: NextPage<{ issues: JiraIssueModel[] }> = ({ issues }) => {
                 />
               </GridInner>
             </GridWrapper>
-          </ContentWrapper>
-        </main>
+          </main>
+        </ContentWrapper>
       </ThemeProvider>
     </div>
   );
