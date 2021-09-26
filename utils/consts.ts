@@ -11,7 +11,6 @@ export const columns: IColumn[] = [
     width: 80,
     headerName: "Key",
     visible,
-    fixedPosition: GridPositions.LEFT,
     field: "key",
   },
   {
