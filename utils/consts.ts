@@ -1,5 +1,5 @@
 import { IColumn, GridPositions } from "@xcritical/grid";
-import { JiraVersionModel } from "../../services/jira";
+import { JiraVersionModel } from "../services/jira";
 
 const width = 150;
 const center = true;

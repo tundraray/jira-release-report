@@ -6,7 +6,7 @@ import JiraService, {
 } from "../../services/jira";
 
 import styles from "../../styles/Home.module.css";
-import { columns } from "./consts";
+import { columns } from "../../utils/consts";
 import {
   ContentWrapper,
   GridInner,
