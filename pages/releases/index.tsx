@@ -12,6 +12,7 @@ import {
   GridInner,
   GridWrapper,
 } from "../../components/styled";
+import { uniqBy } from "../../utils";
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   let components: string[] = ["CrmFront", "CrmFrontReact"];
@@ -32,6 +33,8 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 const Releases: NextPage<{ versions: JiraIssuesGroupedByVersionComponent }> = ({
   versions,
 }) => {
+  const issues = uniqBy(Object.values(versions).flat(), "key");
+  const components = Object.keys(versions).join(", ");
   return (
     <div className={styles.container}>
       <Head>
@@ -41,21 +44,15 @@ const Releases: NextPage<{ versions: JiraIssuesGroupedByVersionComponent }> = ({
 
       <ContentWrapper>
         <GridWrapper>
-          {Object.entries(versions).map(([componentName, issues]) => {
-            return (
-              <>
-                <h1>{componentName}</h1>
-                <GridInner height={issues.length * 37 + 40}>
-                  <Grid
-                    rowHeight={37}
-                    columns={columns}
-                    items={issues}
-                    shouldFitContainer
-                  />
-                </GridInner>
-              </>
-            );
-          })}
+          <h1>{components}</h1>
+          <GridInner height={issues.length * 37 + 40}>
+            <Grid
+              rowHeight={37}
+              columns={columns}
+              items={issues}
+              shouldFitContainer
+            />
+          </GridInner>
         </GridWrapper>
       </ContentWrapper>
     </div>
