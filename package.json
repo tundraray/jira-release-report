@@ -16,6 +16,7 @@
     "@xcritical/select": "^1.1.5",
     "jira-client": "^6.22.0",
     "lodash.get": "^4.4.2",
+    "lodash.sortby": "^4.7.0",
     "next": "^11.1.2",
     "polished": "^4.1.3",
     "react": "17.0.2",
@@ -25,6 +26,7 @@
   },
   "devDependencies": {
     "@types/jira-client": "^6.21.3",
+    "@types/lodash.sortby": "^4.7.6",
     "@types/react": "17.0.24",
     "@types/styled-components": "^5.1.14",
     "eslint": "7.32.0",

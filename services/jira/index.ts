@@ -23,6 +23,7 @@ const fields = [
   "summary",
   "customfield_11467",
   "customfield_11466",
+  "issuelinks",
 ];
 
 class JiraService {
@@ -82,7 +83,7 @@ class JiraService {
 
   async lookupTasksByVersionId(version: string) {
     const issues = (await this._jira.searchJira(
-      `project = "${process.env.JIRA_PROJECT_NAME}" and fixVersion = "${version}" ORDER BY created DESC`,
+      `project = "${process.env.JIRA_PROJECT_NAME}" and fixVersion = "${version}" ORDER BY created asc`,
       {
         maxResults: 100,
         fields,
@@ -99,6 +100,7 @@ class JiraService {
         fields,
       }
     )) as JiraJQLResultAPI;
+
     return issues.issues.map(
       (item) =>
         getObjectWithoutEmptyPropsFrom({

@@ -9,7 +9,7 @@ import * as internalColors from "./colors";
 
 export const buttonsTheme: ButtonTheme = {
   fontSize: DEFAULT_FONT_SIZE,
-  padding: "5px 15px",
+  padding: "0px 0px",
   prefixSpacing: 10,
   postfixSpacing: 10,
   height: "fit-content",

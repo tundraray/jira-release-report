@@ -1,5 +1,6 @@
 import Grid from "@xcritical/grid";
 import type { GetServerSideProps, NextPage } from "next";
+import sortBy from "lodash.sortby";
 import Head from "next/head";
 import JiraService, {
   JiraIssuesGroupedByVersionComponent,
@@ -33,7 +34,11 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 const Releases: NextPage<{ versions: JiraIssuesGroupedByVersionComponent }> = ({
   versions,
 }) => {
-  const issues = uniqBy(Object.values(versions).flat(), "key");
+  const issues = sortBy(
+    uniqBy(Object.values(versions).flat(), "key"),
+    (i) => i.version?.fullName
+  );
+
   const components = Object.keys(versions).join(", ");
   return (
     <div className={styles.container}>

@@ -4,6 +4,7 @@ export interface JiraIssueModel {
   key: string;
   id: string;
   summary: string;
+  link: string;
   type: {
     name: string;
     iconUrl: string;
@@ -20,8 +21,25 @@ export interface JiraIssueModel {
 
   version?: JiraVersionModel;
 
+  linkedIssues: JiraLinkedIssues;
+
   created: string;
   updated: string;
+}
+
+export interface JiraLinkedIssue {
+  key: string;
+  id: string;
+  summary: string;
+  link: string;
+  type: {
+    name: string;
+    iconUrl: string;
+  };
+  status: string;
+}
+export interface JiraLinkedIssues {
+  [direction: string]: JiraLinkedIssue[];
 }
 
 export interface JiraJQLResultAPI {
@@ -50,6 +68,7 @@ export interface JiraFieldsApi {
   customfield_11467: null | string;
   status: Status;
   customfield_11466: null | string;
+  issuelinks: IssueLink[];
 }
 
 export interface Assignee {
@@ -102,4 +121,20 @@ export interface StatusCategory {
   key: string;
   colorName: string;
   name: string;
+}
+
+export interface IssueLink {
+  id: string;
+  self: string;
+  type: IssueLinkType;
+  inwardIssue?: JiraIssueApi;
+  outwardIssue?: JiraIssueApi;
+}
+
+export interface IssueLinkType {
+  id: string;
+  name: string;
+  inward: string;
+  outward: string;
+  self: string;
 }
