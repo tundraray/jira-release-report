@@ -1,10 +1,6 @@
 import Button from "@xcritical/button";
-import { IColumn, GridPositions } from "@xcritical/grid";
-import {
-  JiraIssueModel,
-  JiraLinkedIssues,
-  JiraVersionModel,
-} from "../services/jira";
+import { IColumn } from "@xcritical/grid";
+import { JiraLinkedIssues, JiraVersionModel } from "../services/jira";
 
 const width = 150;
 const center = true;
@@ -25,6 +21,7 @@ export const columns: IColumn[] = [
           <Button
             appearance="gridLink"
             href={issue.link}
+            prefix={<img src={issue.type.iconUrl} />}
             title={issue.summary}
             target="_blank"
             rel="noreferrer"
@@ -45,6 +42,7 @@ export const columns: IColumn[] = [
       return (
         <Button
           appearance="gridLink"
+          prefix={<img src={row.type.iconUrl} />}
           href={row.link}
           target="_blank"
           rel="noreferrer"
@@ -65,6 +63,9 @@ export const columns: IColumn[] = [
     headerName: "Status",
     visible,
     field: "status",
+    render: (content) => {
+      return <b>{content}</b>;
+    },
   },
   {
     width,
@@ -72,7 +73,14 @@ export const columns: IColumn[] = [
     visible,
     field: "assignee",
     render: (content) => {
-      return content?.name;
+      return (
+        <Button
+          appearance="gridLink"
+          prefix={<img width={18} src={content?.iconUrl} />}
+        >
+          {content?.name || "Unassigned"}
+        </Button>
+      );
     },
   },
   {

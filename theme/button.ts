@@ -10,9 +10,10 @@ import * as internalColors from "./colors";
 export const buttonsTheme: ButtonTheme = {
   fontSize: DEFAULT_FONT_SIZE,
   padding: "0px 0px",
-  prefixSpacing: 10,
+  prefixSpacing: 5,
   postfixSpacing: 10,
-  height: "fit-content",
+  height: "18px",
+  alignItems: "flex-start",
   appearance: {
     default: {
       background: internalColors.DEFAULT,
