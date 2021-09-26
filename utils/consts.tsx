@@ -34,6 +34,20 @@ export const columns: IColumn[] = [
     },
   },
   {
+    width: 150,
+    headerName: "Implements Summary",
+    visible,
+    field: "impl_s",
+    render: (_, __, row) => {
+      const links = row.linkedIssues as JiraLinkedIssues;
+      if (links["implements"]?.length) {
+        const issue = links["implements"][0];
+        return issue.summary;
+      }
+      return null;
+    },
+  },
+  {
     width: 90,
     headerName: "Key",
     visible,
