@@ -1,3 +1,5 @@
+import { JiraVersionModel } from "./versions";
+
 export interface JiraIssueModel {
   key: string;
   id: string;
@@ -15,6 +17,8 @@ export interface JiraIssueModel {
 
   plannedStartDate: string | null;
   plannedEndDate: string | null;
+
+  version?: JiraVersionModel;
 
   created: string;
   updated: string;

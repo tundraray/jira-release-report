@@ -10,7 +10,6 @@ export const GridWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  padding: 0 20px;
   box-sizing: border-box;
   * {
     box-sizing: inherit;
@@ -24,7 +23,8 @@ export const GridInner = styled.div`
   border: 1px solid ${colors.DEFAULT_BORDER};
   height: ${(props: TGridWrapperProps): number =>
     props.height ? props.height : 32}px;
-  min-height: calc(100vh - 120px);
+  min-height: ${(props: TGridWrapperProps): number =>
+    props.height ? props.height : 32}px;
 `;
 
 export const ContentWrapper = styled.div`

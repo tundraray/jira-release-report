@@ -1,8 +1,15 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
 
+import { ThemeProvider } from "styled-components";
+
+import theme from "../theme";
+
 function JiraApp({ Component, pageProps }: AppProps) {
-  console.log(pageProps);
-  return <Component {...pageProps} />;
+  return (
+    <ThemeProvider theme={theme}>
+      <Component {...pageProps} />
+    </ThemeProvider>
+  );
 }
 export default JiraApp;

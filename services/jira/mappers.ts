@@ -1,3 +1,4 @@
+import { getObjectWithoutEmptyPropsFrom } from "utilitify";
 import { Assignee, Issuetype, JiraIssueApi, JiraIssueModel } from "./types";
 
 export function toJiraIssue(issue: JiraIssueApi): JiraIssueModel {
