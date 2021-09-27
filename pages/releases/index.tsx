@@ -52,7 +52,9 @@ const formatDate = (date: string | undefined) => {
 };
 
 const groupIssues = (
-  issue: JiraIssueModel[]
+  issue: JiraIssueModel[],
+  withImplements: boolean = true,
+  withPDR: boolean = true
 ): Record<string, JiraIssueModel[]> => {
   return sortBy(uniqBy(issue, "key"), (i) => i.version?.fullName).reduce<
     Record<string, JiraIssueModel[]>
@@ -61,6 +63,8 @@ const groupIssues = (
     if (!acc[releaseDate]) {
       acc[releaseDate] = [];
     }
+
+    const isPDR = withPDR && !item.version?.userReleaseDate;
     const foundedParent = acc[releaseDate].find(
       ({ id }) => id === item.parentId
     );
@@ -68,6 +72,10 @@ const groupIssues = (
       if (!foundedParent.children) foundedParent.children = [];
 
       foundedParent.children.push({ ...item });
+    } else if (withPDR && !item.version?.userReleaseDate) {
+      return acc;
+    } else if (withImplements && !item.linkedIssues["implements"]?.length) {
+      return acc;
     } else acc[releaseDate].push({ ...item });
     return acc;
   }, {});
@@ -78,23 +86,9 @@ const Releases: NextPage<{ versions: JiraIssuesGroupedByVersionComponent }> = ({
 }) => {
   const [checked, setChecked] = useState(true);
   const [checkedPDR, setCheckedPDR] = useState(true);
-  const issues = useMemo(
-    () =>
-      groupIssues(
-        Object.values(versions)
-          .flat()
-          .filter((item) => {
-            if (checkedPDR && !item.version?.userReleaseDate) {
-              return false;
-            }
-            if (checked) {
-              return !!item.linkedIssues["implements"]?.length;
-            }
-            return true;
-          })
-      ),
-    [versions, checked, checkedPDR]
-  );
+  const issues = useMemo(() => {
+    return groupIssues(Object.values(versions).flat(), checked, checkedPDR);
+  }, [versions, checked, checkedPDR]);
   const components = Object.keys(versions);
   return (
     <div className={styles.container}>
