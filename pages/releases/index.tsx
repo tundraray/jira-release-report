@@ -95,7 +95,7 @@ const Releases: NextPage<{ versions: JiraIssuesGroupedByVersionComponent }> = ({
       ),
     [versions, checked, checkedPDR]
   );
-  const components = Object.keys(issues);
+  const components = Object.keys(versions);
   return (
     <div className={styles.container}>
       <Head>
