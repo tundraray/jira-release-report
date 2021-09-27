@@ -18,7 +18,8 @@ import {
   GridWrapper,
 } from "../../components/styled";
 import { uniqBy } from "../../utils";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import Checkbox from "@xcritical/checkbox";
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   let components: string[] = ["CrmFront", "CrmFrontReact"];
@@ -67,9 +68,20 @@ const groupIssues = (
 const Releases: NextPage<{ versions: JiraIssuesGroupedByVersionComponent }> = ({
   versions,
 }) => {
+  const [checked, setChecked] = useState(true);
   const issues = useMemo(
-    () => groupIssues(Object.values(versions).flat()),
-    [versions]
+    () =>
+      groupIssues(
+        Object.values(versions)
+          .flat()
+          .filter((item) => {
+            if (checked) {
+              return !!item.linkedIssues["implements"]?.length;
+            }
+            return true;
+          })
+      ),
+    [versions, checked]
   );
 
   const components = Object.keys(versions).join(", ");
@@ -83,6 +95,12 @@ const Releases: NextPage<{ versions: JiraIssuesGroupedByVersionComponent }> = ({
       <ContentWrapper>
         <GridWrapper>
           <h1>{components}</h1>
+          <Checkbox
+            checked={checked}
+            appearance="checkbox"
+            onChange={setChecked}
+            label="Only with Implements"
+          />
           {Object.entries(issues).map(([date, issueList]) => (
             <>
               <h2>{date}</h2>

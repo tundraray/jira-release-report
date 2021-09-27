@@ -136,13 +136,4 @@ export const columns: IColumn[] = [
       return (row.timeTracking as TimeSpent)?.timeSpent ?? "--";
     },
   },
-  {
-    width,
-    headerName: "PRD",
-    visible,
-    field: "prd",
-    render: (_, __, row) => {
-      return (row.version as JiraVersionModel).userReleaseDate ?? "----";
-    },
-  },
 ];

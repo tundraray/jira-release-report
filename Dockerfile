@@ -5,4 +5,4 @@ WORKDIR /opt/app
 
 COPY . .
 
-CMD ["node_modules/.bin/next", "pm-start"]
+CMD ["yarn", "start"]
