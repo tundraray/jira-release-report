@@ -23,6 +23,7 @@ export function toJiraIssue(issue: JiraIssueApi): JiraIssueModel {
       updated,
       issuelinks,
       timetracking,
+      parent,
     },
   } = issue;
 
@@ -37,6 +38,7 @@ export function toJiraIssue(issue: JiraIssueApi): JiraIssueModel {
     type: toJiraIssueType(issuetype)!,
     priority: priority?.name,
     status: status?.name,
+    parentId: parent?.id,
     plannedStartDate: customfield_11467,
     plannedEndDate: customfield_11466,
     linkedIssues: links,

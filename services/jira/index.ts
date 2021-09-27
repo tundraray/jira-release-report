@@ -26,6 +26,7 @@ const fields = [
   "issuelinks",
   "worklog",
   "timetracking",
+  "parent",
 ];
 
 class JiraService {
@@ -96,20 +97,19 @@ class JiraService {
 
   async lookupTasksByVersion(version: JiraVersionModel) {
     const issues = (await this._jira.searchJira(
-      `project = "${process.env.JIRA_PROJECT_NAME}" and fixVersion = "${version.id}" ORDER BY created asc`,
+      `project = "${process.env.JIRA_PROJECT_NAME}" and fixVersion = "${version.id}" ORDER BY key ASC`,
       {
         maxResults: 100,
         fields,
       }
     )) as JiraJQLResultAPI;
 
-    return issues.issues.map(
-      (item) =>
-        getObjectWithoutEmptyPropsFrom({
-          ...toJiraIssue(item),
-          version,
-        }) as JiraIssueModel
-    );
+    return issues.issues.map((item) => {
+      return getObjectWithoutEmptyPropsFrom({
+        ...toJiraIssue(item),
+        version,
+      }) as JiraIssueModel;
+    });
   }
 
   async versionsWithIssues(

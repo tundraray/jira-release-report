@@ -3,6 +3,7 @@ import { JiraVersionModel } from "./versions";
 export interface JiraIssueModel {
   key: string;
   id: string;
+  parentId?: string;
   summary: string;
   link: string;
   type: {
@@ -22,6 +23,8 @@ export interface JiraIssueModel {
   version?: JiraVersionModel;
   timeTracking: TimeSpent;
   linkedIssues: JiraLinkedIssues;
+
+  children?: JiraIssueModel[];
 
   created: string;
   updated: string;
@@ -60,6 +63,7 @@ export interface JiraIssueApi {
 
 export interface JiraFieldsApi {
   summary: string;
+  parent?: JiraIssueApi;
   issuetype: Issuetype;
   worklog: TimeSpent[];
   timetracking: TimeSpent;

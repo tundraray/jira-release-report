@@ -18,6 +18,7 @@ import {
   GridWrapper,
 } from "../../components/styled";
 import { uniqBy } from "../../utils";
+import { useMemo } from "react";
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   let components: string[] = ["CrmFront", "CrmFrontReact"];
@@ -35,25 +36,41 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   };
 };
 
-const Releases: NextPage<{ versions: JiraIssuesGroupedByVersionComponent }> = ({
-  versions,
-}) => {
-  const issues = sortBy(
-    uniqBy(Object.values(versions).flat(), "key"),
-    (i) => i.version?.fullName
-  ).reduce<Record<string, JiraIssueModel[]>>((acc, item) => {
-    const releaseDate = item.version?.userReleaseDate
-      ? format(
-          parse(item.version?.userReleaseDate, "dd/LLL/yy", new Date()),
-          "EEEE, dd MMMM yyyy"
-        )
-      : "No release date";
+const formatDate = (date: string | undefined) => {
+  return date
+    ? format(parse(date, "dd/LLL/yy", new Date()), "EEEE, dd MMMM yyyy")
+    : "No release date";
+};
+
+const groupIssues = (
+  issue: JiraIssueModel[]
+): Record<string, JiraIssueModel[]> => {
+  return sortBy(uniqBy(issue, "key"), (i) => i.version?.fullName).reduce<
+    Record<string, JiraIssueModel[]>
+  >((acc, item) => {
+    const releaseDate = formatDate(item.version?.userReleaseDate);
     if (!acc[releaseDate]) {
       acc[releaseDate] = [];
     }
-    acc[releaseDate].push(item);
+    const foundedParent = acc[releaseDate].find(
+      ({ id }) => id === item.parentId
+    );
+    if (foundedParent) {
+      if (!foundedParent.children) foundedParent.children = [];
+
+      foundedParent.children.push({ ...item });
+    } else acc[releaseDate].push({ ...item });
     return acc;
   }, {});
+};
+
+const Releases: NextPage<{ versions: JiraIssuesGroupedByVersionComponent }> = ({
+  versions,
+}) => {
+  const issues = useMemo(
+    () => groupIssues(Object.values(versions).flat()),
+    [versions]
+  );
 
   const components = Object.keys(versions).join(", ");
   return (
@@ -69,7 +86,7 @@ const Releases: NextPage<{ versions: JiraIssuesGroupedByVersionComponent }> = ({
           {Object.entries(issues).map(([date, issueList]) => (
             <>
               <h2>{date}</h2>
-              <GridInner height={issueList.length * 37 + 40}>
+              <GridInner height={issueList.length * 37 + 37}>
                 <Grid
                   rowHeight={37}
                   columns={columns}

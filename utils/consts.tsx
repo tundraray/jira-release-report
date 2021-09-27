@@ -11,6 +11,12 @@ const center = true;
 const visible = true;
 
 export const columns: IColumn[] = [
+  /* {
+    width: 100,
+    headerName: "id",
+    visible,
+    field: "id",
+  }, */
   {
     center,
     width: 100,
@@ -74,6 +80,7 @@ export const columns: IColumn[] = [
     width: 400,
     headerName: "Summary",
     visible,
+    isExpandable: true,
     field: "summary",
   },
   {
