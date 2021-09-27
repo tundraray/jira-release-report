@@ -47,7 +47,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
 const formatDate = (date: string | undefined) => {
   return date
-    ? format(parse(date, "dd/LLL/yy", new Date()), "EEEE, dd MMMM yyyy")
+    ? format(parse(date, "dd/LLL/yy", new Date()), "dd MMMM yyyy, EEEE")
     : "No release date";
 };
 
@@ -122,19 +122,21 @@ const Releases: NextPage<{ versions: JiraIssuesGroupedByVersionComponent }> = ({
             onChange={setCheckedPDR}
             label="Only with PDR"
           />
-          {Object.entries(issues).map(([date, issueList]) => (
-            <>
-              <h2>{date}</h2>
-              <GridInner height={issueList.length * 37 + 37}>
-                <Grid
-                  rowHeight={37}
-                  columns={columns}
-                  items={issueList}
-                  shouldFitContainer
-                />
-              </GridInner>
-            </>
-          ))}
+          {Object.entries(issues)
+            .sort(([date], [dateNext]) => (date < dateNext ? -1 : 1))
+            .map(([date, issueList]) => (
+              <>
+                <h2>{date}</h2>
+                <GridInner height={issueList.length * 37 + 37}>
+                  <Grid
+                    rowHeight={37}
+                    columns={columns}
+                    items={issueList}
+                    shouldFitContainer
+                  />
+                </GridInner>
+              </>
+            ))}
         </GridWrapper>
       </ContentWrapper>
     </div>
