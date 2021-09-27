@@ -20,7 +20,7 @@ export interface JiraIssueModel {
   plannedEndDate: string | null;
 
   version?: JiraVersionModel;
-
+  timeTracking: TimeSpent;
   linkedIssues: JiraLinkedIssues;
 
   created: string;
@@ -61,6 +61,8 @@ export interface JiraIssueApi {
 export interface JiraFieldsApi {
   summary: string;
   issuetype: Issuetype;
+  worklog: TimeSpent[];
+  timetracking: TimeSpent;
   created: string;
   assignee: Assignee;
   priority: Priority;
@@ -69,6 +71,15 @@ export interface JiraFieldsApi {
   status: Status;
   customfield_11466: null | string;
   issuelinks: IssueLink[];
+}
+
+export interface TimeSpent {
+  originalEstimate?: string;
+  remainingEstimate?: string;
+  timeSpent?: string;
+  originalEstimateSeconds?: number;
+  remainingEstimateSeconds?: number;
+  timeSpentSeconds?: number;
 }
 
 export interface Assignee {

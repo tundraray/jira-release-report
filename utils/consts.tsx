@@ -1,6 +1,10 @@
 import Button from "@xcritical/button";
 import { IColumn } from "@xcritical/grid";
-import { JiraLinkedIssues, JiraVersionModel } from "../services/jira";
+import {
+  JiraLinkedIssues,
+  JiraVersionModel,
+  TimeSpent,
+} from "../services/jira";
 
 const width = 150;
 const center = true;
@@ -106,16 +110,32 @@ export const columns: IColumn[] = [
       return (row.version as JiraVersionModel).fullName;
     },
   },
+
+  {
+    width: 60,
+    headerName: "OE",
+    visible,
+    field: "OE",
+    render: (_, __, row) => {
+      return (row.timeTracking as TimeSpent)?.originalEstimate ?? "--";
+    },
+  },
+  {
+    width: 60,
+    headerName: "TS",
+    visible,
+    field: "ts",
+    render: (_, __, row) => {
+      return (row.timeTracking as TimeSpent)?.timeSpent ?? "--";
+    },
+  },
   {
     width,
-    headerName: "Planned Release Date",
+    headerName: "PRD",
     visible,
     field: "prd",
     render: (_, __, row) => {
-      return (
-        (row.version as JiraVersionModel).userReleaseDate ??
-        "Without release date"
-      );
+      return (row.version as JiraVersionModel).userReleaseDate ?? "----";
     },
   },
 ];

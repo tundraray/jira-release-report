@@ -1,4 +1,3 @@
-import { getObjectWithoutEmptyPropsFrom } from "utilitify";
 import {
   Assignee,
   IssueLink,
@@ -23,6 +22,7 @@ export function toJiraIssue(issue: JiraIssueApi): JiraIssueModel {
       created,
       updated,
       issuelinks,
+      timetracking,
     },
   } = issue;
 
@@ -40,6 +40,7 @@ export function toJiraIssue(issue: JiraIssueApi): JiraIssueModel {
     plannedStartDate: customfield_11467,
     plannedEndDate: customfield_11466,
     linkedIssues: links,
+    timeTracking: timetracking,
     created: created,
     updated: updated,
   };

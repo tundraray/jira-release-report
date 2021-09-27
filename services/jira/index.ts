@@ -24,6 +24,8 @@ const fields = [
   "customfield_11467",
   "customfield_11466",
   "issuelinks",
+  "worklog",
+  "timetracking",
 ];
 
 class JiraService {
