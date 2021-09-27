@@ -45,10 +45,18 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   };
 };
 
-const formatDate = (date: string | undefined) => {
+const formatKeyDate = (date: string | undefined) => {
   return date
-    ? format(parse(date, "dd/LLL/yy", new Date()), "dd MMMM yyyy, EEEE")
+    ? format(parse(date, "dd/LLL/yy", new Date()), "yyyy-MM-dd")
     : "No release date";
+};
+
+const formatDate = (date: string) => {
+  try {
+    return format(parse(date, "yyyy-MM-dd", new Date()), "dd MMMM yyyy, EEEE");
+  } catch (error) {
+    return "No release date";
+  }
 };
 
 const groupIssues = (
@@ -59,7 +67,7 @@ const groupIssues = (
   return sortBy(uniqBy(issue, "key"), (i) => i.version?.fullName).reduce<
     Record<string, JiraIssueModel[]>
   >((acc, item) => {
-    const releaseDate = formatDate(item.version?.userReleaseDate);
+    const releaseDate = formatKeyDate(item.version?.userReleaseDate);
     if (!acc[releaseDate]) {
       acc[releaseDate] = [];
     }
@@ -87,7 +95,15 @@ const Releases: NextPage<{ versions: JiraIssuesGroupedByVersionComponent }> = ({
   const [checked, setChecked] = useState(true);
   const [checkedPDR, setCheckedPDR] = useState(true);
   const issues = useMemo(() => {
-    return groupIssues(Object.values(versions).flat(), checked, checkedPDR);
+    const items = groupIssues(
+      Object.values(versions).flat(),
+      checked,
+      checkedPDR
+    );
+    Object.entries(items).forEach(([date]) => {
+      if (!items[date].length) delete items[date];
+    });
+    return items;
   }, [versions, checked, checkedPDR]);
   const components = Object.keys(versions);
   return (
@@ -120,7 +136,7 @@ const Releases: NextPage<{ versions: JiraIssuesGroupedByVersionComponent }> = ({
             .sort(([date], [dateNext]) => (date < dateNext ? -1 : 1))
             .map(([date, issueList]) => (
               <>
-                <h2>{date}</h2>
+                <h2>{formatDate(date)}</h2>
                 <GridInner height={issueList.length * 37 + 37}>
                   <Grid
                     rowHeight={37}
