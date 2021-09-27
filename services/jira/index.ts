@@ -55,7 +55,7 @@ class JiraService {
           return false;
         }
 
-        if (filter) {
+        if (filter && filter.length) {
           const [component] = name.split("-");
           if (Array.isArray(filter)) {
             return filter.includes(component);
@@ -63,7 +63,7 @@ class JiraService {
             return component === filter;
           }
         }
-        return false;
+        return true;
       })
       .reduce((acc: JiraVersionsModel, { name, ...other }) => {
         const [component, componentVersion] = name.split("-");

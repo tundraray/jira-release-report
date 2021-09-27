@@ -20,15 +20,23 @@ import {
 import { uniqBy } from "../../utils";
 import { useMemo, useState } from "react";
 import Checkbox from "@xcritical/checkbox";
+import cache from "../../utils/cache";
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  let components: string[] = ["CrmFront", "CrmFrontReact"];
+  let components: string[] = [];
   if (query["component"]) {
     components = Array.isArray(query["component"])
       ? query["component"]
       : query["component"].split(",");
   }
-  const versions = await JiraService.issuesByComponent(components, true);
+  const cacheKey = `release_${components.join("_")}`;
+  let versions = cache.get<JiraIssuesGroupedByVersionComponent>(
+    `release_${components.join("_")}`
+  );
+  if (versions == undefined) {
+    versions = await JiraService.issuesByComponent(components, true);
+    cache.set(cacheKey, versions, 300);
+  }
 
   return {
     props: {
@@ -69,22 +77,25 @@ const Releases: NextPage<{ versions: JiraIssuesGroupedByVersionComponent }> = ({
   versions,
 }) => {
   const [checked, setChecked] = useState(true);
+  const [checkedPDR, setCheckedPDR] = useState(true);
   const issues = useMemo(
     () =>
       groupIssues(
         Object.values(versions)
           .flat()
           .filter((item) => {
+            if (checkedPDR && !item.version?.userReleaseDate) {
+              return false;
+            }
             if (checked) {
               return !!item.linkedIssues["implements"]?.length;
             }
             return true;
           })
       ),
-    [versions, checked]
+    [versions, checked, checkedPDR]
   );
-
-  const components = Object.keys(versions).join(", ");
+  const components = Object.keys(issues);
   return (
     <div className={styles.container}>
       <Head>
@@ -94,12 +105,22 @@ const Releases: NextPage<{ versions: JiraIssuesGroupedByVersionComponent }> = ({
 
       <ContentWrapper>
         <GridWrapper>
-          <h1>{components}</h1>
+          <h1>
+            {components.length > 4
+              ? `${components.length} components`
+              : components.join(", ")}
+          </h1>
           <Checkbox
             checked={checked}
             appearance="checkbox"
             onChange={setChecked}
             label="Only with Implements"
+          />
+          <Checkbox
+            checked={checkedPDR}
+            appearance="checkbox"
+            onChange={setCheckedPDR}
+            label="Only with PDR"
           />
           {Object.entries(issues).map(([date, issueList]) => (
             <>
