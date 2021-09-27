@@ -5,4 +5,4 @@ WORKDIR /opt/app
 
 COPY . .
 
-CMD ["node_modules/.bin/next", "start"]
+CMD ["node_modules/.bin/next", "pm-start"]
