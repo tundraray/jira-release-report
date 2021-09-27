@@ -136,9 +136,13 @@ const Releases: NextPage<{ versions: JiraIssuesGroupedByVersionComponent }> = ({
             .sort(([date], [dateNext]) => (date < dateNext ? -1 : 1))
             .map(([date, issueList]) => (
               <>
-                <h2>{formatDate(date)}</h2>
-                <GridInner height={issueList.length * 37 + 37}>
+                <h2 key={`h2_${date}`}>{formatDate(date)}</h2>
+                <GridInner
+                  key={`gridi_${date}`}
+                  height={issueList.length * 37 + 37}
+                >
                   <Grid
+                    key={`grid_${date}`}
                     rowHeight={37}
                     columns={columns}
                     items={issueList}
